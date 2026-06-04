@@ -44,9 +44,34 @@ else if (_summary is not null)
             </MudPaper>
         </MudItem>
 
-        <MudItem xs="12" md="6">
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4 metric-card">
+                <MudText Typo="Typo.h6" Class="mb-2">Current allocation</MudText>
+                @if (HasChartData(_allocationData))
+                {
+                    <MudChart ChartType="ChartType.Pie"
+                              InputData="@_allocationData"
+                              InputLabels="@_allocationLabels"
+                              Width="100%"
+                              Height="260px"
+                              ChartOptions="@_pieChartOptions" />
+                }
+                else
+                {
+                    <MudAlert Severity="Severity.Info" Dense="true">No invested value or cash to chart yet.</MudAlert>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="8">
             <MudPaper Class="pa-4 metric-card">
                 <MudText Typo="Typo.h6">Allocation vs target</MudText>
+                <MudChart ChartType="ChartType.Bar"
+                          ChartSeries="@_allocationSeries"
+                          XAxisLabels="@_allocationLabels"
+                          Width="100%"
+                          Height="280px"
+                          ChartOptions="@_barChartOptions" />
                 <MudSimpleTable Hover="true" Dense="true" Class="mt-2">
                     <thead><tr><th></th><th>Current</th><th>Target</th><th>Gap</th></tr></thead>
                     <tbody>
@@ -55,6 +80,44 @@ else if (_summary is not null)
                         <tr><td>Cash</td><td>@_summary.Current.CashWeight.ToString("P1")</td><td>@_summary.Target.CashWeight.ToString("P0")</td><td>@_summary.Gap.CashWeight.ToString("P1")</td></tr>
                     </tbody>
                 </MudSimpleTable>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4 metric-card">
+                <MudText Typo="Typo.h6" Class="mb-2">Sector exposure</MudText>
+                @if (HasChartData(_sectorData))
+                {
+                    <MudChart ChartType="ChartType.Pie"
+                              InputData="@_sectorData"
+                              InputLabels="@_sectorLabels"
+                              Width="100%"
+                              Height="300px"
+                              ChartOptions="@_pieChartOptions" />
+                }
+                else
+                {
+                    <MudAlert Severity="Severity.Info" Dense="true">No sector exposure yet.</MudAlert>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4 metric-card">
+                <MudText Typo="Typo.h6" Class="mb-2">Largest holdings</MudText>
+                @if (_holdingSeries.Count > 0)
+                {
+                    <MudChart ChartType="ChartType.Bar"
+                              ChartSeries="@_holdingSeries"
+                              XAxisLabels="@_holdingLabels"
+                              Width="100%"
+                              Height="300px"
+                              ChartOptions="@_barChartOptions" />
+                }
+                else
+                {
+                    <MudAlert Severity="Severity.Info" Dense="true">Add positions to compare holding weights.</MudAlert>
+                }
             </MudPaper>
         </MudItem>
 
@@ -106,6 +169,24 @@ else if (_summary is not null)
     private PortfolioSummaryDto? _summary;
     private IReadOnlyList<RecommendationDto> _topRecs = Array.Empty<RecommendationDto>();
     private IReadOnlyList<RiskAlertDto> _alerts = Array.Empty<RiskAlertDto>();
+    private readonly string[] _allocationLabels = { "ETF", "Stocks", "Cash" };
+    private double[] _allocationData = Array.Empty<double>();
+    private List<ChartSeries> _allocationSeries = new();
+    private string[] _sectorLabels = Array.Empty<string>();
+    private double[] _sectorData = Array.Empty<double>();
+    private string[] _holdingLabels = Array.Empty<string>();
+    private List<ChartSeries> _holdingSeries = new();
+
+    private readonly ChartOptions _pieChartOptions = new()
+    {
+        MaxNumYAxisTicks = 5
+    };
+
+    private readonly ChartOptions _barChartOptions = new()
+    {
+        MaxNumYAxisTicks = 5,
+        LineStrokeWidth = 3
+    };
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,10 +197,73 @@ else if (_summary is not null)
         var recs = await Recommendations.GenerateAsync(userId);
         _topRecs = recs.Where(r => r.Prudence is PrudenceLevel.Interesting or PrudenceLevel.Watch).Take(5).ToList();
         _alerts = await Risk.EvaluateAsync(userId);
+        BuildCharts(_summary);
         _loading = false;
     }
 
     private static string F(decimal v) => v.ToString("N2");
+    private void BuildCharts(PortfolioSummaryDto summary)
+    {
+        _allocationData = new[]
+        {
+            D(summary.Current.EtfWeight * 100m),
+            D(summary.Current.StockWeight * 100m),
+            D(summary.Current.CashWeight * 100m),
+        };
+
+        _allocationSeries = new List<ChartSeries>
+        {
+            new()
+            {
+                Name = "Current",
+                Data = new[]
+                {
+                    D(summary.Current.EtfWeight * 100m),
+                    D(summary.Current.StockWeight * 100m),
+                    D(summary.Current.CashWeight * 100m),
+                }
+            },
+            new()
+            {
+                Name = "Target",
+                Data = new[]
+                {
+                    D(summary.Target.EtfWeight * 100m),
+                    D(summary.Target.StockWeight * 100m),
+                    D(summary.Target.CashWeight * 100m),
+                }
+            },
+        };
+
+        var sectors = summary.SectorExposure
+            .OrderByDescending(kv => kv.Value)
+            .Take(6)
+            .ToList();
+
+        _sectorLabels = sectors.Select(kv => kv.Key).ToArray();
+        _sectorData = sectors.Select(kv => D(kv.Value * 100m)).ToArray();
+
+        var holdings = summary.Positions
+            .OrderByDescending(p => p.CurrentValue)
+            .Take(8)
+            .ToList();
+
+        _holdingLabels = holdings.Select(p => p.Ticker).ToArray();
+        _holdingSeries = holdings.Count == 0
+            ? new List<ChartSeries>()
+            : new List<ChartSeries>
+            {
+                new()
+                {
+                    Name = "Current value",
+                    Data = holdings.Select(p => D(p.CurrentValue)).ToArray()
+                }
+            };
+    }
+
+    private static bool HasChartData(IEnumerable<double> values) => values.Any(v => v > 0.0001d);
+    private static double D(decimal value) => decimal.ToDouble(value);
+
     private static Color PrudenceColor(PrudenceLevel p) => p switch
     {
         PrudenceLevel.Interesting => Color.Success,

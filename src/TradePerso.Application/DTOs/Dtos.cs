@@ -69,7 +69,13 @@ public sealed record MonthlyPlanResultDto(
     IReadOnlyList<MonthlyPlanItemDto> Items,
     IReadOnlyList<string> Warnings);
 
-public sealed record BacktestPointDto(DateOnly Date, decimal DcaCurve, decimal MixedCurve, decimal LumpSumCurve);
+public sealed record BacktestPointDto(
+    DateOnly Date,
+    decimal InstrumentPrice,
+    decimal InvestedCapital,
+    decimal DcaCurve,
+    decimal MixedCurve,
+    decimal LumpSumCurve);
 
 public sealed record BacktestMetricsDto(
     decimal DcaInvested,

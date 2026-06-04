@@ -49,14 +49,42 @@ else if (_result is not null)
                 <MudText Class="mt-2">CAGR: @_result.Metrics.LumpSumCagr.ToString("P2")</MudText>
             </MudPaper>
         </MudItem>
+        @if (_capitalSeries.Count > 0)
+        {
+            <MudItem xs="12">
+                <MudPaper Class="pa-4 metric-card">
+                    <MudText Typo="Typo.h6" Class="mb-2">Simulated capital curve</MudText>
+                    <MudChart ChartType="ChartType.Line"
+                              ChartSeries="@_capitalSeries"
+                              XAxisLabels="@_chartLabels"
+                              Width="100%"
+                              Height="360px"
+                              ChartOptions="@_lineChartOptions"
+                              CanHideSeries="true" />
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="pa-4 metric-card">
+                    <MudText Typo="Typo.h6" Class="mb-2">@_ticker.ToUpperInvariant() price history</MudText>
+                    <MudChart ChartType="ChartType.Line"
+                              ChartSeries="@_priceSeries"
+                              XAxisLabels="@_chartLabels"
+                              Width="100%"
+                              Height="280px"
+                              ChartOptions="@_priceChartOptions" />
+                </MudPaper>
+            </MudItem>
+        }
         <MudItem xs="12">
             <MudPaper Class="pa-2 metric-card">
                 <MudTable Items="_result.Curve" Dense="true" Hover="true" Height="380px" FixedHeader="true" Virtualize="true">
                     <HeaderContent>
-                        <MudTh>Date</MudTh><MudTh>DCA</MudTh><MudTh>70/20/10</MudTh><MudTh>Lump sum</MudTh>
+                        <MudTh>Date</MudTh><MudTh>Price</MudTh><MudTh>Invested</MudTh><MudTh>DCA</MudTh><MudTh>70/20/10</MudTh><MudTh>Lump sum</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd>@context.Date</MudTd>
+                        <MudTd>@context.InstrumentPrice.ToString("N2")</MudTd>
+                        <MudTd>@context.InvestedCapital.ToString("N2")</MudTd>
                         <MudTd>@context.DcaCurve.ToString("N2")</MudTd>
                         <MudTd>@context.MixedCurve.ToString("N2")</MudTd>
                         <MudTd>@context.LumpSumCurve.ToString("N2")</MudTd>
@@ -81,6 +109,22 @@ else if (_result is not null)
     private decimal _initial = 1000m;
     private BacktestResultDto? _result;
     private bool _running;
+    private string[] _chartLabels = Array.Empty<string>();
+    private List<ChartSeries> _capitalSeries = new();
+    private List<ChartSeries> _priceSeries = new();
+
+    private readonly ChartOptions _lineChartOptions = new()
+    {
+        LineStrokeWidth = 3,
+        MaxNumYAxisTicks = 6
+    };
+
+    private readonly ChartOptions _priceChartOptions = new()
+    {
+        LineStrokeWidth = 3,
+        MaxNumYAxisTicks = 5,
+        DisableLegend = true
+    };
 
     private async Task RunAsync()
     {
@@ -91,6 +135,48 @@ else if (_result is not null)
             DateOnly.FromDateTime(_start.Value),
             DateOnly.FromDateTime(_end.Value),
             _monthly, _initial);
+        BuildChartData(_result);
         _running = false;
     }
+
+    private void BuildChartData(BacktestResultDto result)
+    {
+        var points = Sample(result.Curve, 90);
+        _chartLabels = points
+            .Select((p, i) => ChartLabel(p.Date, i, points.Count))
+            .ToArray();
+
+        _capitalSeries = new List<ChartSeries>
+        {
+            new() { Name = "DCA", Data = points.Select(p => D(p.DcaCurve)).ToArray() },
+            new() { Name = "70/20/10", Data = points.Select(p => D(p.MixedCurve)).ToArray() },
+            new() { Name = "Lump sum", Data = points.Select(p => D(p.LumpSumCurve)).ToArray() },
+            new() { Name = "Capital invested", Data = points.Select(p => D(p.InvestedCapital)).ToArray() },
+        };
+
+        _priceSeries = new List<ChartSeries>
+        {
+            new() { Name = "Price", Data = points.Select(p => D(p.InstrumentPrice)).ToArray() },
+        };
+    }
+
+    private static IReadOnlyList<BacktestPointDto> Sample(IReadOnlyList<BacktestPointDto> points, int maxPoints)
+    {
+        if (points.Count <= maxPoints) return points;
+
+        var step = (int)Math.Ceiling(points.Count / (double)maxPoints);
+        return points
+            .Where((_, index) => index % step == 0 || index == points.Count - 1)
+            .ToList();
+    }
+
+    private static string ChartLabel(DateOnly date, int index, int count)
+    {
+        var interval = Math.Max(1, count / 8);
+        return index == 0 || index == count - 1 || index % interval == 0
+            ? date.ToString("yyyy-MM")
+            : string.Empty;
+    }
+
+    private static double D(decimal value) => decimal.ToDouble(value);
 }

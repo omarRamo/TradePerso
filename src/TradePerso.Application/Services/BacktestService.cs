@@ -79,7 +79,13 @@ public sealed class BacktestService : IBacktestService
                 if (dd > maxDdDca) maxDdDca = dd;
             }
 
-            curve.Add(new BacktestPointDto(pt.Date, Round(dcaValue), Round(mixedValue), Round(lumpValue)));
+            curve.Add(new BacktestPointDto(
+                pt.Date,
+                Round(pt.Close),
+                Round(dcaInvested),
+                Round(dcaValue),
+                Round(mixedValue),
+                Round(lumpValue)));
         }
 
         decimal years = Math.Max(0.1m, (decimal)(monthly[^1].Date.ToDateTime(TimeOnly.MinValue) - monthly[0].Date.ToDateTime(TimeOnly.MinValue)).TotalDays / 365.25m);
