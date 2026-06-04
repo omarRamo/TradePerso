@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: 8.0.x
+  WEB_PROJECT: src/TradePerso.Web/TradePerso.Web.csproj
+
+jobs:
+  build:
+    name: Build and publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore TradePerso.sln
+
+      - name: Build
+        run: dotnet build TradePerso.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test TradePerso.sln --configuration Release --no-build --verbosity normal
+
+      - name: Publish web app
+        run: dotnet publish ${{ env.WEB_PROJECT }} --configuration Release --no-build --output publish
+
+      - name: Upload published app
+        uses: actions/upload-artifact@v4
+        with:
+          name: tradeperso-web
+          path: publish
+          if-no-files-found: error

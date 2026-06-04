@@ -80,6 +80,15 @@ The whole application depends only on `IMarketDataProvider`, so no other code ne
 
 SQLite database is auto-created at first run (`tradeperso.db` next to the `Web` project). Override the connection in `appsettings.json` → `ConnectionStrings:TradePerso`.
 
+### GitHub Actions and deployment
+
+Two workflows are configured:
+
+- `CI`: restores, builds, tests, publishes the Blazor Server app, and uploads the published app as a workflow artifact.
+- `Container`: builds the Docker image and publishes it to GitHub Container Registry on pushes to `main` and version tags.
+
+This application is a Blazor Server / ASP.NET Core app with Identity, SQLite, and SignalR, so GitHub Pages cannot host it directly. For a public test URL, deploy the GHCR image to a server-capable host such as Azure App Service, Render, Railway, Fly.io, or a VPS. The container listens on port `8080`; set `MarketData__Provider=Sample` for a deterministic demo, or keep `Yahoo` for live market data.
+
 ### Disclaimer
 
 For personal research only. Not investment advice.

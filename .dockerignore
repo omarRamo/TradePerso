@@ -1,0 +1,12 @@
+.git/
+.github/
+.vs/
+bin/
+obj/
+artifacts/
+test-results/
+*.db
+*.db-shm
+*.db-wal
+*.user
+*.suo
