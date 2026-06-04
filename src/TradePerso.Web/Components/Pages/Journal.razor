@@ -13,10 +13,10 @@
 <MudPaper Class="pa-4 metric-card mb-3">
     <MudText Typo="Typo.h6" Class="mb-2">Position sizing</MudText>
     <MudGrid Spacing="2">
-        <MudItem xs="6" sm="3"><MudNumericField T="decimal" @bind-Value="_pv" Label="Portfolio value" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="3"><MudNumericField T="decimal" @bind-Value="_risk" Label="Risk per trade %" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="3"><MudNumericField T="decimal" @bind-Value="_entry" Label="Entry" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="3"><MudNumericField T="decimal" @bind-Value="_stop" Label="Stop" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudNumericField id="journal-sizing-portfolio-value" T="decimal" @bind-Value="_pv" Label="Portfolio value" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudNumericField id="journal-sizing-risk" T="decimal" @bind-Value="_risk" Label="Risk per trade %" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudNumericField id="journal-sizing-entry" T="decimal" @bind-Value="_entry" Label="Entry" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudNumericField id="journal-sizing-stop" T="decimal" @bind-Value="_stop" Label="Stop" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
         <MudItem xs="12"><MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Compute">Compute</MudButton></MudItem>
     </MudGrid>
     @if (_sizing is not null)
@@ -32,12 +32,12 @@
 <MudPaper Class="pa-4 metric-card mb-3">
     <MudText Typo="Typo.h6" Class="mb-2">New entry</MudText>
     <MudGrid Spacing="2">
-        <MudItem xs="6" sm="3"><MudTextField @bind-Value="_form.Ticker" Label="Ticker" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="3"><MudTextField @bind-Value="_form.SetupTag" Label="Setup" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="2"><MudNumericField T="decimal?" @bind-Value="_form.EntryPrice" Label="Entry" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="2"><MudNumericField T="decimal?" @bind-Value="_form.StopLoss" Label="Stop" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="2"><MudNumericField T="decimal?" @bind-Value="_form.TargetPrice" Label="Target" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="12"><MudTextField @bind-Value="_form.Thesis" Label="Thesis" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="2" /></MudItem>
+        <MudItem xs="6" sm="3"><MudTextField id="journal-entry-ticker" @bind-Value="_form.Ticker" Label="Ticker" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudTextField id="journal-entry-setup" @bind-Value="_form.SetupTag" Label="Setup" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField id="journal-entry-entry" T="decimal?" @bind-Value="_form.EntryPrice" Label="Entry" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField id="journal-entry-stop" T="decimal?" @bind-Value="_form.StopLoss" Label="Stop" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField id="journal-entry-target" T="decimal?" @bind-Value="_form.TargetPrice" Label="Target" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="12"><MudTextField id="journal-entry-thesis" @bind-Value="_form.Thesis" Label="Thesis" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="2" /></MudItem>
         <MudItem xs="12"><MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAsync">Save entry</MudButton></MudItem>
     </MudGrid>
 </MudPaper>

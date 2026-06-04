@@ -35,7 +35,7 @@ dotnet restore
 dotnet run --project src/TradePerso.Web
 ```
 
-Open `https://localhost:5001`. A demo account is seeded on first run:
+Open `https://localhost:56680` (or `http://localhost:56681`). A demo account is seeded on first run:
 
 - email: `omar@tradeperso.local`
 - password: `admin`

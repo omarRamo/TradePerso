@@ -10,16 +10,16 @@
 
 <MudPaper Class="pa-4 metric-card mb-3">
     <MudGrid Spacing="2">
-        <MudItem xs="6" sm="3"><MudTextField @bind-Value="_form.Ticker" Label="Ticker" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudTextField id="transactions-ticker" @bind-Value="_form.Ticker" Label="Ticker" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
         <MudItem xs="6" sm="3">
-            <MudSelect T="TransactionType" @bind-Value="_form.TransactionType" Label="Type" Variant="Variant.Outlined" Margin="Margin.Dense">
+            <MudSelect id="transactions-type" T="TransactionType" @bind-Value="_form.TransactionType" Label="Type" Variant="Variant.Outlined" Margin="Margin.Dense">
                 @foreach (var t in Enum.GetValues<TransactionType>())
                 { <MudSelectItem Value="t">@t</MudSelectItem> }
             </MudSelect>
         </MudItem>
-        <MudItem xs="6" sm="2"><MudNumericField T="decimal" @bind-Value="_form.Quantity" Label="Qty" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="2"><MudNumericField T="decimal" @bind-Value="_form.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="2"><MudDatePicker @bind-Date="_form.Date" Label="Date" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField id="transactions-qty" T="decimal" @bind-Value="_form.Quantity" Label="Qty" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField id="transactions-price" T="decimal" @bind-Value="_form.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="2"><MudDatePicker id="transactions-date" @bind-Date="_form.Date" Label="Date" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
         <MudItem xs="12"><MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAsync">Add transaction</MudButton></MudItem>
     </MudGrid>
 </MudPaper>

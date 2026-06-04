@@ -68,17 +68,17 @@ else
 
             <MudPaper Class="pa-4 metric-card mt-3">
                 <MudText Typo="Typo.h6" Class="mb-2">Add / update position</MudText>
-                <MudTextField @bind-Value="_form.Ticker" Label="Ticker" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                <MudTextField @bind-Value="_form.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudSelect T="AssetType" @bind-Value="_form.AssetType" Label="Type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2">
+                <MudTextField id="portfolio-ticker" @bind-Value="_form.Ticker" Label="Ticker" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                <MudTextField id="portfolio-name" @bind-Value="_form.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudSelect id="portfolio-type" T="AssetType" @bind-Value="_form.AssetType" Label="Type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2">
                     @foreach (var t in Enum.GetValues<AssetType>())
                     {
                         <MudSelectItem Value="t">@t</MudSelectItem>
                     }
                 </MudSelect>
-                <MudNumericField T="decimal" @bind-Value="_form.Quantity" Label="Quantity" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudNumericField T="decimal" @bind-Value="_form.AvgBuyPrice" Label="Avg buy price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudTextField @bind-Value="_form.Sector" Label="Sector" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="portfolio-quantity" T="decimal" @bind-Value="_form.Quantity" Label="Quantity" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="portfolio-avg-buy-price" T="decimal" @bind-Value="_form.AvgBuyPrice" Label="Avg buy price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudTextField id="portfolio-sector" @bind-Value="_form.Sector" Label="Sector" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mt-3" OnClick="SaveAsync">Save</MudButton>
             </MudPaper>
         </MudItem>

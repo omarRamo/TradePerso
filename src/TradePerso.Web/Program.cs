@@ -17,7 +17,10 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddTradePersoInfrastructure(builder.Configuration);
 builder.Services.AddTradePersoApplication();
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
+{
+    config.PopoverOptions.ThrowOnDuplicateProvider = false;
+});
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddEndpointsApiExplorer();

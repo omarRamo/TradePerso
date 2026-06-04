@@ -13,9 +13,10 @@
         }
 
         <form method="post" action="/auth/register">
-            <MudTextField T="string" Label="Email" name="email" Required="true" InputType="InputType.Email"
+            <AntiforgeryToken />
+            <MudTextField T="string" id="register-email" Label="Email" name="email" Required="true" InputType="InputType.Email"
                           Variant="Variant.Outlined" Class="mb-3" />
-            <MudTextField T="string" Label="Password" name="password" Required="true" InputType="InputType.Password"
+            <MudTextField T="string" id="register-password" Label="Password" name="password" Required="true" InputType="InputType.Password"
                           Variant="Variant.Outlined" Class="mb-4" />
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
                 Register

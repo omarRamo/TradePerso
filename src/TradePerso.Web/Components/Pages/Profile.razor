@@ -32,9 +32,9 @@ else
                 @if (_prefs is not null)
                 {
                     <MudSwitch T="bool" @bind-Value="_prefs.IsEnabled" Color="Color.Primary" Label="Email digest" Class="mt-2" />
-                    <MudTextField @bind-Value="_prefs.Email" Label="Recipient" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                    <MudNumericField T="decimal" @bind-Value="_prefs.MinScore" Label="Minimum score" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                    <MudNumericField T="int" @bind-Value="_prefs.MaxItems" Label="Max items" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                    <MudTextField id="profile-recipient" @bind-Value="_prefs.Email" Label="Recipient" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                    <MudNumericField id="profile-minimum-score" T="decimal" @bind-Value="_prefs.MinScore" Label="Minimum score" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                    <MudNumericField id="profile-max-items" T="int" @bind-Value="_prefs.MaxItems" Label="Max items" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" OnClick="SaveAsync">Save</MudButton>
                 }
             </MudPaper>

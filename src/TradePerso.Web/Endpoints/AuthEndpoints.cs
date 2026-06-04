@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Antiforgery;
 using TradePerso.Application.Abstractions;
 
 namespace TradePerso.Web.Endpoints;
@@ -9,8 +10,14 @@ public static class AuthEndpoints
     {
         app.MapPost("/auth/login", async (
             HttpContext ctx,
-            SignInManager<IdentityUser> signIn) =>
+            SignInManager<IdentityUser> signIn,
+            IAntiforgery antiforgery) =>
         {
+            if (await ValidateAntiforgeryAsync(ctx, antiforgery) is { } invalid)
+            {
+                return invalid;
+            }
+
             var form = await ctx.Request.ReadFormAsync();
             var email = form["email"].ToString();
             var password = form["password"].ToString();
@@ -21,14 +28,20 @@ public static class AuthEndpoints
             if (result.Succeeded)
                 return Results.Redirect(returnUrl);
             return Results.Redirect($"/login?error=1&returnUrl={Uri.EscapeDataString(returnUrl)}");
-        }).DisableAntiforgery();
+        });
 
         app.MapPost("/auth/register", async (
             HttpContext ctx,
             UserManager<IdentityUser> users,
             SignInManager<IdentityUser> signIn,
-            ISeedService seed) =>
+            ISeedService seed,
+            IAntiforgery antiforgery) =>
         {
+            if (await ValidateAntiforgeryAsync(ctx, antiforgery) is { } invalid)
+            {
+                return invalid;
+            }
+
             var form = await ctx.Request.ReadFormAsync();
             var email = form["email"].ToString();
             var password = form["password"].ToString();
@@ -45,14 +58,29 @@ public static class AuthEndpoints
             await seed.SeedDefaultsAsync(user.Id, email);
             await signIn.SignInAsync(user, isPersistent: true);
             return Results.Redirect("/");
-        }).DisableAntiforgery();
+        });
 
         app.MapPost("/auth/logout", async (SignInManager<IdentityUser> signIn) =>
         {
             await signIn.SignOutAsync();
             return Results.Redirect("/login");
-        }).DisableAntiforgery();
+        }).RequireAuthorization();
 
         return app;
+    }
+
+    private static async Task<IResult?> ValidateAntiforgeryAsync(
+        HttpContext ctx,
+        IAntiforgery antiforgery)
+    {
+        try
+        {
+            await antiforgery.ValidateRequestAsync(ctx);
+            return null;
+        }
+        catch (AntiforgeryValidationException)
+        {
+            return Results.BadRequest("Invalid antiforgery token.");
+        }
     }
 }

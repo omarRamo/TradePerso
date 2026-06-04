@@ -18,34 +18,34 @@ else
         <MudGrid Spacing="3">
             <MudItem xs="12" md="6">
                 <MudText Typo="Typo.h6" Class="mb-2">Capital</MudText>
-                <MudNumericField T="decimal" @bind-Value="_s.CapitalTotal" Label="Total capital" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                <MudNumericField T="decimal" @bind-Value="_s.CashAvailable" Label="Available cash" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudNumericField T="decimal" @bind-Value="_s.MonthlyInvestment" Label="Monthly investment" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudTextField @bind-Value="_s.BaseCurrency" Label="Currency" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-total-capital" T="decimal" @bind-Value="_s.CapitalTotal" Label="Total capital" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                <MudNumericField id="settings-available-cash" T="decimal" @bind-Value="_s.CashAvailable" Label="Available cash" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-monthly-investment" T="decimal" @bind-Value="_s.MonthlyInvestment" Label="Monthly investment" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudTextField id="settings-currency" @bind-Value="_s.BaseCurrency" Label="Currency" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
             </MudItem>
             <MudItem xs="12" md="6">
                 <MudText Typo="Typo.h6" Class="mb-2">Target allocation</MudText>
-                <MudNumericField T="decimal" @bind-Value="_s.TargetAllocationEtf" Label="ETF %" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                <MudNumericField T="decimal" @bind-Value="_s.TargetAllocationStocks" Label="Stocks %" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudNumericField T="decimal" @bind-Value="_s.TargetAllocationCash" Label="Cash %" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudNumericField T="decimal" @bind-Value="_s.MaxIndividualPosition" Label="Soft max per position" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudNumericField T="decimal" @bind-Value="_s.HardMaxIndividualPosition" Label="Hard max per position" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-etf-allocation" T="decimal" @bind-Value="_s.TargetAllocationEtf" Label="ETF %" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                <MudNumericField id="settings-stocks-allocation" T="decimal" @bind-Value="_s.TargetAllocationStocks" Label="Stocks %" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-cash-allocation" T="decimal" @bind-Value="_s.TargetAllocationCash" Label="Cash %" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-soft-max-position" T="decimal" @bind-Value="_s.MaxIndividualPosition" Label="Soft max per position" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-hard-max-position" T="decimal" @bind-Value="_s.HardMaxIndividualPosition" Label="Hard max per position" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
             </MudItem>
             <MudItem xs="12" md="6">
                 <MudText Typo="Typo.h6" Class="mb-2">Risk</MudText>
-                <MudSelect T="RiskProfile" @bind-Value="_s.RiskProfile" Label="Risk profile" Variant="Variant.Outlined" Margin="Margin.Dense">
+                <MudSelect id="settings-risk-profile" T="RiskProfile" @bind-Value="_s.RiskProfile" Label="Risk profile" Variant="Variant.Outlined" Margin="Margin.Dense">
                     @foreach (var rp in Enum.GetValues<RiskProfile>())
                     { <MudSelectItem Value="rp">@rp</MudSelectItem> }
                 </MudSelect>
-                <MudNumericField T="decimal" @bind-Value="_s.RiskPerTradePct" Label="Risk per trade (fraction)" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudNumericField T="decimal" @bind-Value="_s.DefaultRrTarget" Label="Default R:R target" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
-                <MudNumericField T="decimal" @bind-Value="_s.TechExposureLimit" Label="Tech exposure limit" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-risk-per-trade" T="decimal" @bind-Value="_s.RiskPerTradePct" Label="Risk per trade (fraction)" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-default-rr-target" T="decimal" @bind-Value="_s.DefaultRrTarget" Label="Default R:R target" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-tech-exposure-limit" T="decimal" @bind-Value="_s.TechExposureLimit" Label="Tech exposure limit" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
             </MudItem>
             <MudItem xs="12" md="6">
                 <MudText Typo="Typo.h6" Class="mb-2">Market data</MudText>
-                <MudTextField @bind-Value="_s.MarketDataProvider" Label="Provider (display)" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Set the actual provider in appsettings (MarketData:Provider)." />
+                <MudTextField id="settings-market-data-provider" @bind-Value="_s.MarketDataProvider" Label="Provider (display)" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="Set the actual provider in appsettings (MarketData:Provider)." />
                 <MudSwitch T="bool" @bind-Value="_s.AutoSyncMarketData" Label="Auto-sync" Color="Color.Primary" Class="mt-2" />
-                <MudNumericField T="int" @bind-Value="_s.AutoSyncIntervalHours" Label="Auto-sync interval (h)" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                <MudNumericField id="settings-auto-sync-interval" T="int" @bind-Value="_s.AutoSyncIntervalHours" Label="Auto-sync interval (h)" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
             </MudItem>
             <MudItem xs="12">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAsync">Save settings</MudButton>

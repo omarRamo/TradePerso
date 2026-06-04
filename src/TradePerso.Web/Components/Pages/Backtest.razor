@@ -8,11 +8,11 @@
 
 <MudPaper Class="pa-4 metric-card mb-3">
     <MudGrid Spacing="2">
-        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_ticker" Label="Ticker" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="3"><MudDatePicker @bind-Date="_start" Label="Start" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="3"><MudDatePicker @bind-Date="_end" Label="End" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="3"><MudNumericField T="decimal" @bind-Value="_monthly" Label="Monthly contribution" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-        <MudItem xs="6" sm="3"><MudNumericField T="decimal" @bind-Value="_initial" Label="Initial cash" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="12" sm="3"><MudTextField id="backtest-ticker" @bind-Value="_ticker" Label="Ticker" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudDatePicker id="backtest-start" @bind-Date="_start" Label="Start" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudDatePicker id="backtest-end" @bind-Date="_end" Label="End" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudNumericField id="backtest-monthly-contribution" T="decimal" @bind-Value="_monthly" Label="Monthly contribution" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+        <MudItem xs="6" sm="3"><MudNumericField id="backtest-initial-cash" T="decimal" @bind-Value="_initial" Label="Initial cash" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
         <MudItem xs="12" sm="3" Class="d-flex align-end">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RunAsync" FullWidth="true">Run</MudButton>
         </MudItem>
